@@ -6,11 +6,51 @@
 
 {% block main %}
     {% if aboutUser %}
-        <p>Seu nome:{{ aboutUser['username'] }}</p>
-        <p>Seu nível{{ aboutUser['level'] }}</p>
-        {% for i in range(1,  aboutUser['level']+1 ) %}
-            <span height="{{ 10 + ( i * 10 ) }}" width="20"></span>
-        {% endfor %}
+        <div class="content_edit_perfil" style="display:flex;justify-content:center;align-items:center;">
+            <div class="card" style="width: 18rem;">
+                <img src="{{ aboutUser['image'] }}" class="card-img-top" alt="{{ aboutUser['username']}}">
+                <div class="card-body">
+                <h3 class="card-title">{{ aboutUser['username'] }}</h3>
+                <p class="card-text">{{ aboutUser['about'] }}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Level <strong>{{ aboutUser['level'] }}</strong></li>
+                    <button class="edit_perfil btn btn-primary">Edit</button>
+                </ul>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            const btn_edit_perfil = document.querySelector('button.edit_perfil')
+            const content = document.querySelector('.content_edit_perfil')
+            let oldContent = '';
+
+            btn_edit_perfil.addEventListener('click',() => {
+                oldContent = content.innerHTML
+                content.innerHTML = `
+                    <form class="card" style="width: 18rem;" action="/perfil" method="post">
+                        <img src="{{ aboutUser['image'] }}" class="card-img-top" alt="{{ aboutUser['username']}}">
+
+                        <div class="card-body">
+                            <div class="form-group">
+                                <input class="form-control" name="image" type="url" maxLength="255" placeholder="Link of Image" value="{{ aboutUser['image'] }}">
+                            </div>
+                                
+                            <div class="form-group">
+                                <input class="form-control" name="username" placeholder="Username" type="text" value="{{ aboutUser['username'] }}">
+                            </div>
+
+                            <div class="form-group">
+                                <textarea class="form-control" name="about" placeholder="Description" type="text" maxLength="255">{{ aboutUser['about'] }} </textarea>
+                            </div>
+
+                            <button type="submit" class="edit_perfil btn btn-primary">Edit</button>
+                        </div>
+                    </form>
+                `;
+            })
+
+        </script>
     {% endif %}
     {% if message_error %}
         <div class="mt-5 alert alert-danger alert-dismissible fade show" role="alert">>

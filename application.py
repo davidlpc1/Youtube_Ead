@@ -108,9 +108,21 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         passwordAgain = request.form.get("password_again")
+        image = request.form.get("image")
+        about = request.form.get("about")
+
         # Ensure username was submitted
         if not username:
             return render_template("register.html", message_error="You must provide username")
+        
+        #Ensure image was submitted
+        elif not image:
+            return render_template("register.html", message_error="You must provide a link of image")
+
+        #Ensure about was submitted
+        elif not about:
+            return render_template("register.html", message_error="You must provide an description")
+
         # Ensure password was submitted
         elif not password or not passwordAgain:
             return render_template("register.html", message_error="You must provide password")
@@ -127,8 +139,8 @@ def register():
             return render_template("register.html", message_error="That name is already in use")
 
         # Registring user
-        db.execute("INSERT INTO users (username,hash,level) VALUES(:username,:hashpassword,1); ",
-        username=username,hashpassword=generate_password_hash(password))
+        db.execute("INSERT INTO users (username,hash,level,image,about) VALUES(:username,:hashpassword,1,:image,:about); ",
+        username=username,hashpassword=generate_password_hash(password),image=image,about=about)
 
         # Taking user id to the session
         user = db.execute('SELECT * FROM users WHERE username = :username',username=username)[0]
@@ -144,12 +156,27 @@ def register():
 def perfil():
     """Show videos,playlists,level"""
     if request.method == "POST":
-        return render_template("perfil.html", message_error="Method Post in progress")
-    aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
-    print('--------------------------------------------------')
-    print('aboutUser:         ',aboutUser)
-    print('--------------------------------------------------')
-    return render_template("perfil.html",aboutUser=aboutUser)
+        username = request.form.get("username")
+        image = request.form.get("image")
+        about = request.form.get("about")
+        
+        if not username:
+            return render_template("perfil.html", message_error="You must provide a username")
+        elif not image:
+            return render_template("perfil.html", message_error="You must provide a link of image")
+        elif not about:
+            return render_template("perfil.html", message_error="You must provide a description")
+
+        db.execute('UPDATE users SET username=:username, image=:image, about=:about  WHERE id = :userId '
+        ,userId=session['user_id'],username=username,image=image,about=about)
+
+        return redirect('/')
+    else:
+        aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
+        print('--------------------------------------------------')
+        print('aboutUser:         ',aboutUser)
+        print('--------------------------------------------------')
+        return render_template("perfil.html",aboutUser=aboutUser)
 
 def errorhandler(e):
     """Handle error"""
