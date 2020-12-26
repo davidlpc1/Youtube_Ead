@@ -131,12 +131,4 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-
-
-git init
-git add -A
-git commit -m "Starting..."
-git branch -M main
-git remote add origin https://github.com/davidlpc1/Final_Project_CS50.git
-git push -u origin main
-                
+    
