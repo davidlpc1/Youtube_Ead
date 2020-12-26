@@ -20,3 +20,18 @@ Tabela de conteúdos
       * [Combo](#combo)
    * [Tests](#testes)
    * [Tecnologias](#tecnologias)
+  
+<h4 align="center"> 
+	🚧 In Build...  🚧
+</h4>
+
+### Features
+
+- [ ] Cadastro de usuário
+- [ ] Cadastro de vídeo
+- [ ] Cadastro de playlist
+- [ ] Atualização de senha
+- [ ] Atualização de nome
+- [ ] Níveis de usuario
+
+Feito com ajuda de : https://blog.rocketseat.com.br/como-fazer-um-bom-readme/
