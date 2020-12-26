@@ -1,3 +1,7 @@
+"""POWERSHELL $env:FLASK_APP = "application.py" """
+"""CMD set FLASK_APP=application.py"""
+"""Linux,Mac export FLASK_APP=application.py"""
+
 import os
 
 from cs50 import SQL
