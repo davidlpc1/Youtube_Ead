@@ -31,4 +31,14 @@ Content
 
 </div>
 
+<div id="Downloading">
+    <strong><a href="https://github.com/davidlpc1/Final_Project_CS50/archive/main.zip">Download ZIP</a></strong>
+    <strong>OR</strong>
+
+```
+git clone https://github.com/davidlpc1/Final_Project_CS50
+```
+
+</div>
+
 Done following the principles presented in https://blog.rocketseat.com.br/como-fazer-um-bom-readme/

@@ -11,22 +11,4 @@
             <img src="https://www.flaticon.com/svg/static/icons/svg/686/686370.svg" class="youtube-like-icon" alt="Like">
         </button> -->
     </div>
-   
-
-    <script>
-        function getYouTubeThumbnail(youtubeURL) {
-            const youtubeId = youtubeURL
-                .replace(
-                    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
-                    '$7',
-                );
-            return youtubeId 
-        }
-
-        const video = document.querySelector('iframe.youtube-video')
-        video.src = `https://www.youtube.com/embed/${getYouTubeThumbnail(video.dataset.url)}`
-
-        // const like = document.querySelector('.youtube-like-button')
-        
-    </script>
 {% endblock %}

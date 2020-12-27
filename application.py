@@ -154,10 +154,56 @@ def register():
     else:
         return render_template("register.html")
 
+@app.route('/change_password',methods=["GET","POST"])
+@login_required
+def change_password():
+    """Change user password"""
+    session['messageOfIndexPage'] = None
+    if request.method == "POST":
+        #Get Information from form and verify if any of them is Null.
+        oldPassword = request.form.get('old_password')
+        newPassword = request.form.get('new_password')
+        newPasswordAgain = request.form.get('new_password_again')
+
+        if not oldPassword:
+            return apology("change_password.html", message_error='We need your old password')
+
+        elif not newPassword or not newPasswordAgain:
+            return render_template("change_password.html", message_error='We need your old password')
+
+        #Verify if newPassword and newPasswordAgain are equal
+        elif newPassword != newPasswordAgain:
+            return render_template("change_password.html", message_error="The new password are not equal")
+
+        #Verify if newPassword and oldPassword are equal
+        elif newPassword == oldPassword:
+            return render_template("change_password.html", message_error="Your new password cannot be equal to the old password")
+
+        #Get old password from Database
+        passwordInDatabase = db.execute('SELECT hash from users WHERE id=:userId;'
+        ,userId=session["user_id"])[0]['hash']
+
+        #Check if the old password is what is in the form
+        if check_password_hash(passwordInDatabase,oldPassword) :
+            #Alter hash in database
+            newHash = generate_password_hash(newPassword)
+            db.execute('UPDATE users SET hash = :newHash WHERE id = :userId;'
+            ,newHash=newHash,userId=session["user_id"])
+
+            #Redirect for index page
+            session['messageOfIndexPage'] = 'Password has changed!'
+            return redirect('/')
+        else:
+            return render_template("change_password.html",message_error='Your old password is not that')
+    else:
+        return render_template("change_password.html")
+
+
 @app.route("/perfil",methods=["GET", "POST"])
 @login_required
 def perfil():
     aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
+    session['messageOfIndexPage'] = None
     if request.method == "POST":
         username = request.form.get("username")
         image = request.form.get("image")
@@ -173,7 +219,6 @@ def perfil():
         db.execute('UPDATE users SET username=:username, image=:image, about=:about  WHERE id = :userId '
         ,userId=session['user_id'],username=username,image=image,about=about)
 
-        session['messageOfIndexPage'] = None
         return redirect('/')
     else:
         return render_template("perfil.html",aboutUser=aboutUser)
@@ -195,6 +240,7 @@ def create_category():
         session['messageOfIndexPage'] = 'You have create a new category: ' + name
         return redirect('/')
     else:
+        session['messageOfIndexPage'] = None
         return render_template("create_category.html")
 
 @app.route("/create_video",methods=["GET", "POST"])
@@ -223,20 +269,102 @@ def create_video():
         session['messageOfIndexPage'] = 'You have create a new video: ' + name
         return redirect('/')
     else:
+        session['messageOfIndexPage'] = None
         return render_template("create_video.html",categories=categories)
 
 @app.route("/explore")
 @login_required
 def explore():
     videos = db.execute('SELECT * FROM videos')
-    return render_template("explore.html",videos=videos)
+    playlists = db.execute('SELECT * FROM playlists')
+    session['messageOfIndexPage'] = None
+    return render_template("explore.html",videos=videos,playlists=playlists)
 
-@app.route("/explore/<id_video>")
+@app.route("/explore/video/<id_video>")
 @login_required
 def view_video(id_video):
     video = db.execute('SELECT * FROM videos WHERE id=:id_video',id_video=id_video)[0]
+    session['messageOfIndexPage'] = None
     return render_template("view_video.html",video=video)
 
+@app.route("/create_playlist",methods=["GET", "POST"])
+@login_required
+def create_playlist():
+    categories = db.execute('SELECT name FROM categories')
+    if request.method == "POST":
+        name = request.form.get("name")
+        category = request.form.get("category")
+        image = request.form.get("image")
+        if not name:
+            return render_template("create_playlist.html",message_error="You must provide a name",categories=categories)
+
+        elif not category:
+            return render_template("create_playlist.html",message_error="You must provide a category",categories=categories)
+
+        elif not image:
+            return render_template("create_playlist.html",message_error="You must provide a link")
+
+        playlistWithThatName = db.execute('SELECT * FROM playlists WHERE name = :name',name=name)
+        if(len(playlistWithThatName) == 1):
+            return render_template("create_playlist.html",message_error="That playlist already exists",categories=categories)
+        
+        db.execute('INSERT INTO playlists (name, category,user_id,image) VALUES (:name, :category, :user_id,:image)'
+        ,name=name,category=category,user_id=session["user_id"],image=image)
+        
+        session['messageOfIndexPage'] = 'You have create a new playlist: ' + name
+        return redirect('/')
+    else:
+        session['messageOfIndexPage'] = None
+        return render_template("create_playlist.html",categories=categories)
+
+@app.route("/update_playlist/<id_playlist>",methods=["GET", "POST"])
+@login_required
+def update_playlist(id_playlist):
+    playlist = db.execute('SELECT * FROM playlists WHERE id = :id_playlist',id_playlist=id_playlist)[0]
+    categories = db.execute('SELECT * FROM categories WHERE name != :name',name=playlist['category'])
+    videos_ids = db.execute('SELECT video_id FROM videos_playlists WHERE playlist_id =:id_playlist ',id_playlist=id_playlist)
+    videos = []
+    if(len(videos_ids) >= 1):
+        for video_id in videos_ids:
+            print('id: ',video_id)
+            video_name = db.execute('SELECT name FROM videos WHERE id=:video_id',video_id=video_id['video_id'])[0]
+            print('name ',video_name)
+            videos.append(video_name)
+    
+    if request.method == "POST":
+        video = request.form.get("video")
+        image = request.form.get("image")
+        category = request.form.get("category")
+        name = request.form.get("name")
+
+        if not name:
+            return render_template("update_playlist.html",
+            message_error="You must provide a name",playlist=playlist,categories=categories,videos=videos)
+
+        elif not category:
+            return render_template("update_playlist.html",
+            message_error="You must provide a category",playlist=playlist,categories=categories,videos=videos)
+
+        elif not image:
+            return render_template("update_playlist.html",
+            message_error="You must provide a link",playlist=playlist,categories=categories,videos=videos)
+        
+        db.execute('UPDATE playlists SET name=:name,category=:category,image=:image WHERE id=:id_playlist',
+            category=category,name=name,image=image,id_playlist=id_playlist)
+
+        if video != '':
+            video_db = db.execute('SELECT id,name FROM videos where name = :video_name',video_name=video)[0]
+            video_id = video_db['id']
+            video_name = video_db['name']
+            db.execute('INSERT INTO videos_playlists(video_id,playlist_id) VALUES (:video_id,:playlist_id)'
+            ,video_id=video_id,playlist_id=id_playlist)
+            session['messageOfIndexPage'] = f"Você inseriu o vídeo {video_name[:20]}... na Playlist {playlist['name'][:20]}..."
+        else:
+            session['messageOfIndexPage'] = f"Você alterou a playlist {playlist['name'][:20]}..."
+        return redirect('/')
+    else:
+        return render_template("update_playlist.html"
+        ,playlist=playlist,categories=categories,videos=videos)
 
 def errorhandler(e):
     """Handle error"""
@@ -248,4 +376,3 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-    

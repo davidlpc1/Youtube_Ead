@@ -6,8 +6,23 @@
 
 {% block main %}
     <div class="youtube-videos">
+        {% for playlist in playlists %}
+            <a href="/explore/playlist/{{ playlist['id'] }}" class="youtube-link">
+                <div class="card" style="max-width: 200px;">
+                    <img 
+                        src="{{ playlist['image'] }}" 
+                        alt="{{ playlist['name']}}" 
+                        class="card-img-top youtube_thumbnail" 
+                    >
+                    <div class="youtube-info-container">
+                        <p class="youtube-info">{{ playlist['name'] }}</p>
+                        <p class="youtube-info">Categoria: <span>{{ playlist['categoria'] }}</span>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
         {% for video in videos %}
-            <a href="/explore/{{ video['id'] }}" class="youtube-link">
+            <a href="/explore/video/{{ video['id'] }}" class="youtube-link">
                 <div class="card" style="max-width: 200px;">
                     <img 
                         src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
@@ -23,20 +38,4 @@
             </a>
         {% endfor %}
     </div>
-
-    <script>
-        function getYouTubeThumbnail(youtubeURL) {
-            const youtubeId = youtubeURL
-                .replace(
-                    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
-                    '$7',
-                );
-            return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-        }
-
-        const thumbnails = document.querySelectorAll('img.youtube_thumbnail')
-        thumbnails.forEach(thumbnail => {
-            thumbnail.src = getYouTubeThumbnail(thumbnail.dataset.url)
-        })
-    </script>
 {% endblock %}

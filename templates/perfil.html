@@ -23,10 +23,8 @@
         <script type="text/javascript">
             const btn_edit_perfil = document.querySelector('button.edit_perfil')
             const content = document.querySelector('.content_edit_perfil')
-            let oldContent = '';
 
             btn_edit_perfil.addEventListener('click',() => {
-                oldContent = content.innerHTML
                 content.innerHTML = `
                     <form class="card" style="width: 18rem;" action="/perfil" method="post">
                         <img src="{{ aboutUser['image'] }}" class="card-img-top" alt="{{ aboutUser['username']}}">
