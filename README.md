@@ -1,11 +1,9 @@
-<div style="display:flex;justify-content:center;margin-bottom:10px">
-    <img src="static/logo.PNG" alt="Logo">
-</div>
+<img src="static/logo.PNG" alt="Logo">
 
 <h1 align="center">
     <a href="https://www.youtube.com/">🔗 Youtube</a> EAD (FLASK-CS50_Final_Project)</a>
 </h1>
-<p align="center">🚀 Study via Youtube 🚀</p>
+<h2 align="center">🚀 Study via Youtube 🚀</h2>
 
 Content
 =================
@@ -13,18 +11,18 @@ Content
    * [Downloading](#instalacao)
    * [Technologies](#tecnologias)
   
-<h2 align="center"> 
+<h3 align="center"> 
 	🚧 In Build...  🚧
-</h2>
+</h3>
 
 ### Features
 
 - [x] Register user
 - [x] Register video
-- [ ] Cadastro de playlist
-- [ ] Atualização de senha
+- [ ] Register playlist
+- [ ] Update password
 - [x] Update name
-- [ ] Níveis de usuario
+- [ ] Levels of user
 
 <div id="About">    
     
