@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    {% for video in videos %}
+        <p>{{ video['name'] }}</p>
+        <p>{{ video['category']}}</p>
+        <img 
+            src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
+            class="youtube_thumbnail" 
+            alt="{{ video['name']}}" 
+            data-url="{{ video['link']}}"
+        >
+
+    {% endfor %}
+    <script>
+        console.log('SCRIPT')
+        function getYouTubeThumbnail(youtubeURL) {
+            const youtubeId = youtubeURL
+                .replace(
+                    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
+                    '$7',
+                );
+            return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+        }
+
+        const thumbnails = document.querySelectorAll('img.youtube_thumbnail')
+        thumbnails.forEach(thumbnail => {
+            thumbnail.src = getYouTubeThumbnail(thumbnail.dataset.url)
+        })
+    </script>
+{% endblock %}

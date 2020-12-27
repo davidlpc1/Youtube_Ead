@@ -48,8 +48,9 @@ db = SQL("sqlite:///EAD.db")
 @app.route("/")
 @login_required
 def index():
-    """Show videos,playlists,level"""
-    return apology("TODO")
+    return render_template("index.html",
+       message=session['messageOfIndexPage'])
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -79,6 +80,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
+        session['messageOfIndexPage'] = "Log in"
 
         # Redirect user to home page
         return redirect("/")
@@ -95,6 +97,7 @@ def logout():
     # Forget any user_id
     session.clear()
 
+    session['messageOfIndexPage'] = "Log out"
     # Redirect user to login form
     return redirect("/")
 
@@ -154,25 +157,25 @@ def register():
 @app.route("/perfil",methods=["GET", "POST"])
 @login_required
 def perfil():
-    """Show videos,playlists,level"""
+    aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
     if request.method == "POST":
         username = request.form.get("username")
         image = request.form.get("image")
         about = request.form.get("about")
         
         if not username:
-            return render_template("perfil.html", message_error="You must provide a username")
+            return render_template("perfil.html", message_error="You must provide a username",aboutUser=aboutUser)
         elif not image:
-            return render_template("perfil.html", message_error="You must provide a link of image")
+            return render_template("perfil.html", message_error="You must provide a link of image",aboutUser=aboutUser)
         elif not about:
-            return render_template("perfil.html", message_error="You must provide a description")
+            return render_template("perfil.html", message_error="You must provide a description",aboutUser=aboutUser)
 
         db.execute('UPDATE users SET username=:username, image=:image, about=:about  WHERE id = :userId '
         ,userId=session['user_id'],username=username,image=image,about=about)
 
+        session['messageOfIndexPage'] = None
         return redirect('/')
     else:
-        aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
         return render_template("perfil.html",aboutUser=aboutUser)
 
 @app.route("/create_category", methods=["GET", "POST"])
@@ -183,12 +186,50 @@ def create_category():
         if not name:
             return render_template("create_category.html", message_error="You must provide a name")
 
-        username = db.execute('SELECT username FROM users WHERE id = :userId',userId=session["user_id"])[0]['username']
-        db.execute('INSERT INTO categories (name,created_by) VALUES (:name,:created_by)',name=name,created_by=username)
+        #Verify if that category already exists
+        category = db.execute('SELECT * FROM categories WHERE name = :name',name=name)
+        if(len(category) == 1):
+            return render_template("create_category.html", message_error="That category already exists")
 
+        db.execute('INSERT INTO categories (name,user_id) VALUES (:name,:user_id)',name=name,user_id=session['user_id'])
+        session['messageOfIndexPage'] = 'You have create a new category: ' + name
         return redirect('/')
     else:
         return render_template("create_category.html")
+
+@app.route("/create_video",methods=["GET", "POST"])
+@login_required
+def create_video():
+    categories = db.execute('SELECT name FROM categories')
+    if request.method == "POST":
+        name = request.form.get("name")
+        category = request.form.get("category")
+        link = request.form.get("link")
+        
+        if not name:
+            return render_template("create_video.html", message_error="You must provide a name",categories=categories)
+        elif not category:
+            return render_template("create_video.html", message_error="You must provide a category",categories=categories)
+        elif not link:
+            return render_template("create_video.html", message_error="You must provide a link",categories=categories)
+        
+        videos = db.execute('SELECT * FROM videos WHERE name=:name',name=name)
+        if len(videos) == 1:
+            return render_template("create_video.html", message_error="That video already exists",categories=categories)
+
+        db.execute('INSERT INTO videos (link,name,category) VALUES(:link,:name,:category)',
+        link=link,name=name,category=category)
+
+        session['messageOfIndexPage'] = 'You have create a new video: ' + name
+        return redirect('/')
+    else:
+        return render_template("create_video.html",categories=categories)
+
+@app.route("/explore")
+@login_required
+def explore():
+    videos = db.execute('SELECT * FROM videos')
+    return render_template("explore.html",videos=videos)
 
 def errorhandler(e):
     """Handle error"""
