@@ -7,23 +7,15 @@
 </h1>
 <p align="center">🚀 Study via Youtube 🚀</p>
 
-Tabela de conteúdos
+Content
 =================
-   * [Sobre](#Sobre)
-   * [Tabela de Conteudo](#tabela-de-conteudo)
-   * [Instalação](#instalacao)
-   * [Como usar](#como-usar)
-      * [Pre Requisitos](#pre-requisitos)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-   * [Tests](#testes)
-   * [Tecnologias](#tecnologias)
+   * [About](#About)
+   * [Downloading](#instalacao)
+   * [Technologies](#tecnologias)
   
-<h4 align="center"> 
+<h2 align="center"> 
 	🚧 In Build...  🚧
-</h4>
+</h2>
 
 ### Features
 
@@ -34,8 +26,11 @@ Tabela de conteúdos
 - [x] Update name
 - [ ] Níveis de usuario
 
-<div id="Sobre">    
-    SOBRE
+<div id="About">    
+    
+### This is @ davidlpc1's final project for Harvard's cs50 course.
+### The project proposes that you study through educational YouTube videos and help other students present on our platform, adding videos and playlists
+
 </div>
 
 Done following the principles presented in https://blog.rocketseat.com.br/como-fazer-um-bom-readme/
