@@ -27,11 +27,15 @@ Tabela de conteúdos
 
 ### Features
 
-- [ ] Cadastro de usuário
-- [ ] Cadastro de vídeo
+- [x] Register user
+- [x] Register video
 - [ ] Cadastro de playlist
 - [ ] Atualização de senha
-- [ ] Atualização de nome
+- [x] Update name
 - [ ] Níveis de usuario
 
-Feito com ajuda de : https://blog.rocketseat.com.br/como-fazer-um-bom-readme/
+<div id="Sobre">    
+    SOBRE
+</div>
+
+Done following the principles presented in https://blog.rocketseat.com.br/como-fazer-um-bom-readme/
