@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/create_category" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Name of category" type="text">
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+    {% if message_error %}
+        <div class="mt-5 alert alert-danger alert-dismissible fade show" role="alert">>
+            {{  message_error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+{% endblock %}

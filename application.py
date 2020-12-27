@@ -173,10 +173,22 @@ def perfil():
         return redirect('/')
     else:
         aboutUser = db.execute('SELECT * FROM users WHERE id = :userId',userId=session["user_id"])[0]
-        print('--------------------------------------------------')
-        print('aboutUser:         ',aboutUser)
-        print('--------------------------------------------------')
         return render_template("perfil.html",aboutUser=aboutUser)
+
+@app.route("/create_category", methods=["GET", "POST"])
+@login_required
+def create_category():
+    if request.method == "POST":
+        name = request.form.get("name")
+        if not name:
+            return render_template("create_category.html", message_error="You must provide a name")
+
+        username = db.execute('SELECT username FROM users WHERE id = :userId',userId=session["user_id"])[0]['username']
+        db.execute('INSERT INTO categories (name,created_by) VALUES (:name,:created_by)',name=name,created_by=username)
+
+        return redirect('/')
+    else:
+        return render_template("create_category.html")
 
 def errorhandler(e):
     """Handle error"""
