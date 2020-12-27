@@ -231,6 +231,13 @@ def explore():
     videos = db.execute('SELECT * FROM videos')
     return render_template("explore.html",videos=videos)
 
+@app.route("/explore/<id_video>")
+@login_required
+def view_video(id_video):
+    video = db.execute('SELECT * FROM videos WHERE id=:id_video',id_video=id_video)[0]
+    return render_template("view_video.html",video=video)
+
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):

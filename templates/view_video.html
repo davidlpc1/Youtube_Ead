@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    View video
+{% endblock %}
+
+{% block main %}
+    <div class="content-youtube-video">
+        <iframe class="youtube-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-url="{{ video['link']}}" ></iframe>
+        <!-- <button class="youtube-like-button">
+            <img src="https://www.flaticon.com/svg/static/icons/svg/686/686370.svg" class="youtube-like-icon" alt="Like">
+        </button> -->
+    </div>
+   
+
+    <script>
+        function getYouTubeThumbnail(youtubeURL) {
+            const youtubeId = youtubeURL
+                .replace(
+                    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
+                    '$7',
+                );
+            return youtubeId 
+        }
+
+        const video = document.querySelector('iframe.youtube-video')
+        video.src = `https://www.youtube.com/embed/${getYouTubeThumbnail(video.dataset.url)}`
+
+        // const like = document.querySelector('.youtube-like-button')
+        
+    </script>
+{% endblock %}

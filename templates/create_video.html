@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Create video
 {% endblock %}
 
 {% block main %}
     <form action="/create_video" method="post">
         <div class="form-group">
-            <label style="color:#fff" for="name">Max de caracteres: 70</label>
+            <label style="color:#fff" for="name">Max de caracteres: 100</label>
         </div>
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Name" type="text" maxlength="70">
+            <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Name" type="text" maxlength="100">
         </div>
 
         <div class="form-group">

@@ -1,23 +1,30 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Explore
 {% endblock %}
 
 {% block main %}
-    {% for video in videos %}
-        <p>{{ video['name'] }}</p>
-        <p>{{ video['category']}}</p>
-        <img 
-            src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
-            class="youtube_thumbnail" 
-            alt="{{ video['name']}}" 
-            data-url="{{ video['link']}}"
-        >
+    <div class="youtube-videos">
+        {% for video in videos %}
+            <a href="/explore/{{ video['id'] }}" class="youtube-link">
+                <div class="card" style="max-width: 200px;">
+                    <img 
+                        src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
+                        alt="{{ video['name']}}" 
+                        data-url="{{ video['link']}}" 
+                        class="card-img-top youtube_thumbnail" 
+                    >
+                    <div class="youtube-info-container">
+                        <p class="youtube-info">{{ video['name'] }}</p>
+                        <p class="youtube-info">Categoria: <span>{{ video['category']}}</span></p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
 
-    {% endfor %}
     <script>
-        console.log('SCRIPT')
         function getYouTubeThumbnail(youtubeURL) {
             const youtubeId = youtubeURL
                 .replace(

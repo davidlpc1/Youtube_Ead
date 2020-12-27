@@ -1,3 +1,16 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    outline:0;
+    border:0;
+    font-family: 'Roboto', sans-serif
+}
+
+body,html{
+    height:100vh;
+}
+
 nav .navbar-brand
 {
     /* size for brand */
@@ -44,4 +57,71 @@ main img
 {
     /* constrain images on small screens */
     max-width: 100%;
+}
+
+.youtube-videos{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:20px;
+}
+
+.youtube-info-container{
+    padding:10px;
+}
+
+.youtube-link{
+    text-decoration: none;
+}
+
+.youtube_thumbnail{
+    max-width: 200px;
+    text-decoration: none;
+}
+
+.youtube-info {
+    color:#000;
+    font-weight:400;
+    text-decoration: none;
+    max-width: 200px;
+}
+
+.youtube-info:first-child{
+    height: 144px;
+}
+
+.youtube-info span{
+    text-decoration: none;
+    font-weight:600
+}
+
+.youtube-video{
+    min-width: 389px;
+    min-height:219px;
+    max-width:779px;
+    max-height:438px
+}
+
+/* .youtube-like-button{
+    height:32px;
+    width:32px;
+    background:transparent;
+    cursor: pointer;
+}
+
+.youtube-like-icon{
+    pointer-events: none;
+} */
+
+@media (min-width: 768px) {
+    .youtube-video{
+        min-width:779px;
+        min-height:438px;
+        max-width: 1558px;
+        max-height:876px;
+    }
+
+    /* .youtube-like-button{
+        height: 64px;
+        width:64px;
+    } */
 }
