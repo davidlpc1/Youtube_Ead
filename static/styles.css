@@ -4,7 +4,7 @@
     box-sizing:border-box;
     outline:0;
     border:0;
-    font-family: 'Roboto', sans-serif
+    font-family: 'Roboto', sans-serif;
 }
 
 body,html{
@@ -99,6 +99,56 @@ main img
     min-height:219px;
     max-width:779px;
     max-height:438px
+}
+
+.playlist-container{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+}
+
+.playlist-img{
+    width:357;
+    margin:20px
+}
+
+.playlist-info h1{
+    font-weight: 600;
+    font-size:1.4rem;
+    color:#fff;
+}
+
+.playlist-info span{
+    color:#fff;
+    display: block;
+}
+
+.playlist-edit{
+    min-width: 28px;
+    max-width: 64px;
+    min-height: 28px;
+    max-height: 64px;
+}
+
+.playlist-user{
+    margin:20px
+}
+
+.playlist-user span{
+    display: inline;
+}
+
+.videos-playlist{  
+    padding-left: 100px;
+}
+
+.video-playlist{
+    margin:10px;
+}
+
+.perfil-img{
+    max-width: 48px;
+    max-height: 48px;
+    border-radius: 50%;
 }
 
 /* .youtube-like-button{

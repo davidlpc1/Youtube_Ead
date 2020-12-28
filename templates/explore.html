@@ -12,11 +12,11 @@
                     <img 
                         src="{{ playlist['image'] }}" 
                         alt="{{ playlist['name']}}" 
-                        class="card-img-top youtube_thumbnail" 
+                        class="card-img-top" 
                     >
                     <div class="youtube-info-container">
-                        <p class="youtube-info">{{ playlist['name'] }}</p>
-                        <p class="youtube-info">Categoria: <span>{{ playlist['categoria'] }}</span>
+                        <p class="youtube-info">Playlist: {{ playlist['name'] }}</p>
+                        <p class="youtube-info">Categoria: <span>{{ playlist['category'] }}</span>
                     </div>
                 </div>
             </a>
@@ -31,7 +31,7 @@
                         class="card-img-top youtube_thumbnail" 
                     >
                     <div class="youtube-info-container">
-                        <p class="youtube-info">{{ video['name'] }}</p>
+                        <p class="youtube-info">Vídeo: {{ video['name'] }}</p>
                         <p class="youtube-info">Categoria: <span>{{ video['category']}}</span></p>
                     </div>
                 </div>

@@ -48,8 +48,16 @@ db = SQL("sqlite:///EAD.db")
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html",
-       message=session['messageOfIndexPage'])
+    verifyAndUpdateLevel()
+    playlistsCreatedByUser = db.execute('SELECT * FROM playlists WHERE user_id=:user_id',user_id=session['user_id'])
+    videosCreatedByUser = db.execute('SELECT * FROM videos WHERE user_id=:user_id',user_id=session['user_id'])
+    categoriesCreatedByUser = db.execute('SELECT * FROM categories WHERE user_id=:user_id',user_id=session['user_id'])
+    print('________________________________________________________________________________________________')
+    print('playlistsCreatedByUser',playlistsCreatedByUser)
+    print('videosCreatedByUser',videosCreatedByUser)
+    print('categoriesCreatedByUser',categoriesCreatedByUser)
+    print('________________________________________________________________________________________________')
+    return render_template("index.html",message=session['messageOfIndexPage'],playlists=playlistsCreatedByUser,categories=categoriesCreatedByUser,videos=videosCreatedByUser)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -240,6 +248,7 @@ def create_category():
         session['messageOfIndexPage'] = 'You have create a new category: ' + name
         return redirect('/')
     else:
+        verifyAndUpdateLevel()
         session['messageOfIndexPage'] = None
         return render_template("create_category.html")
 
@@ -263,12 +272,13 @@ def create_video():
         if len(videos) == 1:
             return render_template("create_video.html", message_error="That video already exists",categories=categories)
 
-        db.execute('INSERT INTO videos (link,name,category) VALUES(:link,:name,:category)',
-        link=link,name=name,category=category)
+        db.execute('INSERT INTO videos (link,name,category,user_id) VALUES(:link,:name,:category,:user_id)',
+        link=link,name=name,category=category,user_id=session['user_id'])
 
         session['messageOfIndexPage'] = 'You have create a new video: ' + name
         return redirect('/')
     else:
+        verifyAndUpdateLevel()
         session['messageOfIndexPage'] = None
         return render_template("create_video.html",categories=categories)
 
@@ -278,6 +288,7 @@ def explore():
     videos = db.execute('SELECT * FROM videos')
     playlists = db.execute('SELECT * FROM playlists')
     session['messageOfIndexPage'] = None
+    verifyAndUpdateLevel()
     return render_template("explore.html",videos=videos,playlists=playlists)
 
 @app.route("/explore/video/<id_video>")
@@ -285,6 +296,7 @@ def explore():
 def view_video(id_video):
     video = db.execute('SELECT * FROM videos WHERE id=:id_video',id_video=id_video)[0]
     session['messageOfIndexPage'] = None
+    verifyAndUpdateLevel()
     return render_template("view_video.html",video=video)
 
 @app.route("/create_playlist",methods=["GET", "POST"])
@@ -314,6 +326,7 @@ def create_playlist():
         session['messageOfIndexPage'] = 'You have create a new playlist: ' + name
         return redirect('/')
     else:
+        verifyAndUpdateLevel()
         session['messageOfIndexPage'] = None
         return render_template("create_playlist.html",categories=categories)
 
@@ -363,8 +376,38 @@ def update_playlist(id_playlist):
             session['messageOfIndexPage'] = f"Você alterou a playlist {playlist['name'][:20]}..."
         return redirect('/')
     else:
+        verifyAndUpdateLevel()
         return render_template("update_playlist.html"
         ,playlist=playlist,categories=categories,videos=videos)
+
+@app.route("/explore/playlist/<id_playlist>")
+@login_required
+def view_playlist(id_playlist):
+    playlist = db.execute('SELECT * FROM playlists WHERE id=:id_playlist',id_playlist=id_playlist)
+    videos_ids = db.execute('SELECT video_id FROM videos_playlists WHERE playlist_id = :id_playlist',id_playlist=id_playlist)
+    videos = []
+    for video_id in videos_ids:
+        video = db.execute('SELECT * FROM videos WHERE id = :video_id',video_id=video_id['video_id'])
+        videos.append(video)
+    user_id = playlist[0]['user_id']
+    user = db.execute('SELECT * FROM users WHERE id = :user_id',user_id=user_id)
+    verifyAndUpdateLevel()
+    return render_template("view_playlist.html",playlist=playlist[0],videos=videos,user=user[0])
+
+def verifyAndUpdateLevel():
+    atualLevel = int(db.execute('SELECT level FROM users WHERE id = :user_id',user_id=session['user_id'])[0]['level'])
+    categoriesCreatedByUser = db.execute('SELECT Count(name) FROM categories WHERE user_id = :user_id',user_id=session['user_id'])[0]['Count(name)']
+    playlistsCreatedByUser = db.execute('SELECT Count(name) FROM playlists WHERE user_id = :user_id',user_id=session['user_id'])[0]['Count(name)']
+    videosCreatedByUser = db.execute('SELECT Count(name) FROM videos WHERE user_id = :user_id',user_id=session['user_id'])[0]['Count(name)']
+    categoriaPoint = categoriesCreatedByUser * 2
+    videoPoint = videosCreatedByUser * 3
+    playlistPoint = playlistsCreatedByUser * 4
+    total = playlistPoint + categoriaPoint + videoPoint
+    score = int(total / 6)
+    if(atualLevel != score):
+        db.execute('UPDATE users SET level = :level WHERE id = :user_id',level=score,user_id=session['user_id'])
+        session['messageOfIndexPage'] = f'Your level is now:{score}'
+    return None
 
 def errorhandler(e):
     """Handle error"""

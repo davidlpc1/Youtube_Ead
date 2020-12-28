@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    View Playlist
+{% endblock %}
+
+{% block main %}    
+    <div class="playlist-container">
+        <div class="playlist-info">
+            <img class="playlist-img" src="{{ playlist['image'] }}" alt="{{ playlist['name'] }}">
+            <h1> {{ playlist['name'] }}</h1>
+            <span>Category: {{ playlist['category'] }}</span>
+            <a href="/update_playlist/{{ playlist['id'] }}">
+                <img class="playlist-edit" src="/static/edit.svg" alt="Edit">
+            </a>
+            <div class="playlist-user">
+                <span>Posted by {{ user['username'] }}</span>
+                <img class="perfil-img" src="{{ user['image'] }}" alt="{{ user['name'] }}">
+            </div>    
+        </div>
+
+        <div class="videos-playlist">
+            {% for video in videos %}
+                <a class="video-playlist" href="/explore/video/{{ video[0]['id'] }}" class="youtube-link">
+                    <div class="card" style="max-width: 200px;">
+                        <img 
+                            src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
+                            alt="{{ video[0]['name']}}" 
+                            data-url="{{ video[0]['link']}}" 
+                            class="card-img-top youtube_thumbnail" 
+                        >
+                        <div class="youtube-info-container">
+                            <p class="youtube-info">Vídeo {{ video[0]['name'] }}</p>
+                            <p class="youtube-info">Categoria: <span>{{ video[0]['category']}}</span></p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if message %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">>
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endif %}
+{% endblock %}

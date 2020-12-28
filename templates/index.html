@@ -5,13 +5,66 @@
 {% endblock %}
 
 {% block main %}
+    <div>
+
+      <h3 style="color:#fff;margin:20px">Categories you have created:</h3>
+
+      <div class="youtube-videos">
+        {% for category in categories%}
+          <div class="card" style="max-width: 200px; color:#000">
+            <div class="card-body">
+              {{ category['name'] }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h3 style="color:#fff;margin:20px">Playlists you have created:</h3>
+    <div class="youtube-videos">
+      {% for playlist in playlists %}
+          <a href="/explore/playlist/{{ playlist['id'] }}" class="youtube-link">
+              <div class="card" style="max-width: 200px;">
+                  <img 
+                      src="{{ playlist['image'] }}" 
+                      alt="{{ playlist['name']}}" 
+                      class="card-img-top" 
+                  >
+                  <div class="youtube-info-container">
+                      <p class="youtube-info">Playlist: {{ playlist['name'] }}</p>
+                      <p class="youtube-info">Categoria: <span>{{ playlist['category'] }}</span>
+                  </div>
+              </div>
+          </a>
+      {% endfor %}
+      </div>
+      
+      <h3 style="color:#fff;margin:20px">Videos you have created:</h3>
+      <div class="youtube-videos">
+        {% for video in videos %}
+            <a href="/explore/video/{{ video['id'] }}" class="youtube-link">
+                <div class="card" style="max-width: 200px;">
+                    <img 
+                        src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" 
+                        alt="{{ video['name']}}" 
+                        data-url="{{ video['link']}}" 
+                        class="card-img-top youtube_thumbnail" 
+                    >
+                    <div class="youtube-info-container">
+                        <p class="youtube-info">Vídeo: {{ video['name'] }}</p>
+                        <p class="youtube-info">Categoria: <span>{{ video['category']}}</span></p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
     {% if message %}
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">>
+      <div style="margin:20px" class="alert alert-primary alert-dismissible fade show" role="alert">>
         {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
     {% endif %}
-    Building
 {% endblock %}
