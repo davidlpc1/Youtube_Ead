@@ -294,6 +294,20 @@ def view_video(id_video):
     verifyAndUpdateLevel()
     return render_template("view_video.html",video=video)
 
+@app.route("/explore/video/<id_video>/like",methods=['POST'])
+@login_required
+def like_video(id_video):
+    dislike = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
+    id_video=id_video,user_id=session['user_id'])
+    if(len(dislike) == 1):
+        db.execute('UPDATE likes_videos SET value=1 WHERE video_id=:id_video and user_id=:user_id',
+        id_video=id_video,user_id=session['user_id'])
+    else:
+        db.execute('INSERT INTO likes_videos(video_id,user_id,value) VALUES(:id_video,:user_id,1',
+        id_video=id_video,user_id=session['user_id'])    
+    return None
+
+
 @app.route("/create_playlist",methods=["GET", "POST"])
 @login_required
 def create_playlist():
