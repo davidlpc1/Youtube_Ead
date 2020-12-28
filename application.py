@@ -52,11 +52,6 @@ def index():
     playlistsCreatedByUser = db.execute('SELECT * FROM playlists WHERE user_id=:user_id',user_id=session['user_id'])
     videosCreatedByUser = db.execute('SELECT * FROM videos WHERE user_id=:user_id',user_id=session['user_id'])
     categoriesCreatedByUser = db.execute('SELECT * FROM categories WHERE user_id=:user_id',user_id=session['user_id'])
-    print('________________________________________________________________________________________________')
-    print('playlistsCreatedByUser',playlistsCreatedByUser)
-    print('videosCreatedByUser',videosCreatedByUser)
-    print('categoriesCreatedByUser',categoriesCreatedByUser)
-    print('________________________________________________________________________________________________')
     return render_template("index.html",message=session['messageOfIndexPage'],playlists=playlistsCreatedByUser,categories=categoriesCreatedByUser,videos=videosCreatedByUser)
 
 
