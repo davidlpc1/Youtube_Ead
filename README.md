@@ -15,25 +15,6 @@ Content
 <h3 align="center"> 
 	🚧 That was builded 🚧
 </h3>
-
-### Features
-
-- [x] Register user
-- [x] Register video
-- [x] Register playlist
-- [x] View user
-- [x] View video
-- [x] View playlist
-- [x] Like a video
-- [x] Dislike a video
-- [x] Show how many likes a video has
-- [x] Show how many dislikes a video has
-- [x] Update password of user 
-- [x] Update name of user 
-- [x] Update image of user 
-- [x] Update Level of user
-- [x] Update playlist
-- [x] All actions of user in index page
  
 <div id="About">    
 
@@ -110,6 +91,25 @@ export FLASK_DEBUG=0
 flask run
 ```
 </div>
+
+### Features
+
+- [x] Register user
+- [x] Register video
+- [x] Register playlist
+- [x] View user
+- [x] View video
+- [x] View playlist
+- [x] Like a video
+- [x] Dislike a video
+- [x] Show how many likes a video has
+- [x] Show how many dislikes a video has
+- [x] Update password of user 
+- [x] Update name of user 
+- [x] Update image of user 
+- [x] Update Level of user
+- [x] Update playlist
+- [x] All actions of user in index page
 
 ### Autor
 ---
