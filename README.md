@@ -13,7 +13,7 @@ Content
    * [StartingTheApplication](#Starting)
   
 <h3 align="center"> 
-	🚧 In Build...  🚧
+	🚧 That was builded 🚧
 </h3>
 
 ### Features
@@ -24,8 +24,10 @@ Content
 - [x] View user
 - [x] View video
 - [x] View playlist
-- [ ] Like a video
-- [ ] Dislike a video
+- [x] Like a video
+- [x] Dislike a video
+- [x] Show how many likes a video has
+- [x] Show how many dislikes a video has
 - [x] Update password
 - [x] Update name
 - [x] Update Level of user

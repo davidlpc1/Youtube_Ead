@@ -290,22 +290,47 @@ def explore():
 @login_required
 def view_video(id_video):
     video = db.execute('SELECT * FROM videos WHERE id=:id_video',id_video=id_video)[0]
+    thatVideoWasLiked = db.execute('SELECT value FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
+    id_video=id_video,user_id=session['user_id'])
+    totalLikes = db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and user_id=:user_id and value=1'
+    ,id_video=id_video,user_id=session['user_id'])
+    totalDislikes= db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and user_id=:user_id and value=-1'
+    ,id_video=id_video,user_id=session['user_id'])
+
+    if thatVideoWasLiked == []:
+        thatVideoWasLiked = [{'value':0}]
+
+    if totalLikes == []:
+        totalLikes = [{'Count(value)':0}]
+
+    if totalDislikes == []:
+        totalDislikes = [{'Count(value)':0}]
+
     session['messageOfIndexPage'] = None
     verifyAndUpdateLevel()
-    return render_template("view_video.html",video=video)
+    return render_template("view_video.html",video=video,thatVideoWasLiked=int(thatVideoWasLiked[0]['value']),totalLikes=totalLikes[0]['Count(value)'],totalDislikes=totalDislikes[0]['Count(value)'])
 
-@app.route("/explore/video/<id_video>/like",methods=['POST'])
+@app.route("/explore/video/<id_video>/<action>",methods=['POST'])
 @login_required
-def like_video(id_video):
-    dislike = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
-    id_video=id_video,user_id=session['user_id'])
-    if(len(dislike) == 1):
-        db.execute('UPDATE likes_videos SET value=1 WHERE video_id=:id_video and user_id=:user_id',
-        id_video=id_video,user_id=session['user_id'])
+def like_video(id_video,action):
+    if action == 'like':
+        value = 1
+    elif action == 'dislike':
+        value = -1
     else:
-        db.execute('INSERT INTO likes_videos(video_id,user_id,value) VALUES(:id_video,:user_id,1',
-        id_video=id_video,user_id=session['user_id'])    
-    return None
+        return "Error:That value don't exists"
+
+    like = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
+    id_video=id_video,user_id=session['user_id'])
+
+    if(len(like) == 1):
+        db.execute('UPDATE likes_videos SET value=:value WHERE video_id=:id_video and user_id=:user_id',
+        value=value,id_video=id_video,user_id=session['user_id'])
+
+    else:
+        db.execute('INSERT INTO likes_videos(video_id,user_id,value) VALUES(:id_video,:user_id,:value)',
+        id_video=id_video,user_id=session['user_id'],value=value)    
+    return 'Sucess'
 
 
 @app.route("/create_playlist",methods=["GET", "POST"])

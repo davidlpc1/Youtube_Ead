@@ -21,36 +21,49 @@ if (video !== null) {
 
 const like_button = document.querySelector('.youtube-like-button')
 const dislike_button = document.querySelector('.youtube-dislike-button')
+const dislike_span = document.querySelector('.youtube-dislikes')
+const like_span = document.querySelector('.youtube-likes')
+const disableColor = 'rgb(144, 144, 144)'
+const activeColor = 'rgb(6, 95, 212)'
 if(like_button !== null){
-    linkToLike = `${location.pathname}/like`
-    linkToDislike = `${location.pathname}/dislike`
+    const linkToLike = `${location.pathname}/like`
+    const linkToDislike = `${location.pathname}/dislike`
     const like_button_svg = like_button.firstElementChild
     const dislike_button_svg = dislike_button.firstElementChild
-    const disableColor = 'rgb(144, 144, 144)'
-    const activeColor = 'rgb(6, 95, 212)'
 
-    like_button.addEventListener('click', () => {
+    like_button.addEventListener('click', async () => {
         if(like_button_svg.style.fill == disableColor) {
             like_button_svg.style.fill = activeColor
             dislike_button_svg.style.fill = disableColor
-            fetch(linkToLike, {
-                method: "POST",
-                body: {}
-            });
+
+            like_span.innerHTML = `${Number(like_span.innerHTML) + 1 < 0 ? 0 : Number(like_span.innerHTML) + 1 }`
+            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) - 1 < 0 ? 0 : Number(dislike_span.innerHTML) - 1 }`
+
+            await fetch(linkToLike, {
+                method: "POST"
+            })
         }
-        else like_button_svg.style.fill = disableColor
+        else{
+            like_button_svg.style.fill = disableColor
+            like_span.innerHTML = `${Number(like_span.innerHTML) - 1 < 0 ? 0 : Number(like_span.innerHTML) - 1 }`
+        }
     })
 
-    dislike_button.addEventListener('click', () => {
-        console.log('click')
+    dislike_button.addEventListener('click', async () => {
         if( dislike_button_svg.style.fill == disableColor)   {
             dislike_button_svg.style.fill = activeColor
             like_button_svg.style.fill = disableColor
-            fetch(linkToDislike, {
-                method: "POST",
-                body: {}
-            });
+
+            like_span.innerHTML =  `${Number(like_span.innerHTML) - 1 < 0 ? 0 : Number(like_span.innerHTML) - 1 }`
+            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) + 1 < 0 ? 0 : Number(dislike_span.innerHTML) + 1 }`
+
+            await fetch(linkToDislike, {
+                method: "POST"
+            })
         }
-        else  dislike_button_svg.style.fill = disableColor
+        else{
+            dislike_button_svg.style.fill = disableColor
+            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) - 1 < 0 ? 0 : Number(dislike_span.innerHTML) - 1 }`
+        }
     })
 }
