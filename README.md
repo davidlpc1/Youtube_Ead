@@ -34,7 +34,6 @@ Content
 - [x] Update playlist
 - [x] All actions of user in index page
  
-
 <div id="About">    
 
 ## About

@@ -292,10 +292,10 @@ def view_video(id_video):
     video = db.execute('SELECT * FROM videos WHERE id=:id_video',id_video=id_video)[0]
     thatVideoWasLiked = db.execute('SELECT value FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
     id_video=id_video,user_id=session['user_id'])
-    totalLikes = db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and user_id=:user_id and value=1'
-    ,id_video=id_video,user_id=session['user_id'])
-    totalDislikes= db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and user_id=:user_id and value=-1'
-    ,id_video=id_video,user_id=session['user_id'])
+    totalLikes = db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and value=1'
+    ,id_video=id_video)
+    totalDislikes= db.execute('SELECT Count(value) FROM likes_videos WHERE video_id=:id_video and value=-1'
+    ,id_video=id_video)
 
     if thatVideoWasLiked == []:
         thatVideoWasLiked = [{'value':0}]
@@ -310,7 +310,7 @@ def view_video(id_video):
     verifyAndUpdateLevel()
     return render_template("view_video.html",video=video,thatVideoWasLiked=int(thatVideoWasLiked[0]['value']),totalLikes=totalLikes[0]['Count(value)'],totalDislikes=totalDislikes[0]['Count(value)'])
 
-@app.route("/explore/video/<id_video>/<action>",methods=['POST'])
+@app.route("/explore/video/<id_video>/<action>",methods=['POST','DELETE'])
 @login_required
 def like_video(id_video,action):
     if action == 'like':
@@ -319,17 +319,30 @@ def like_video(id_video,action):
         value = -1
     else:
         return "Error:That value don't exists"
+    
+    if request.method == "POST":
 
-    like = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
-    id_video=id_video,user_id=session['user_id'])
+        like = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
+        id_video=id_video,user_id=session['user_id'])
 
-    if(len(like) == 1):
-        db.execute('UPDATE likes_videos SET value=:value WHERE video_id=:id_video and user_id=:user_id',
-        value=value,id_video=id_video,user_id=session['user_id'])
+        if(len(like) == 1):
+            db.execute('UPDATE likes_videos SET value=:value WHERE video_id=:id_video and user_id=:user_id',
+            value=value,id_video=id_video,user_id=session['user_id'])
 
+        else:
+            db.execute('INSERT INTO likes_videos(video_id,user_id,value) VALUES(:id_video,:user_id,:value)',
+            id_video=id_video,user_id=session['user_id'],value=value)   
     else:
-        db.execute('INSERT INTO likes_videos(video_id,user_id,value) VALUES(:id_video,:user_id,:value)',
-        id_video=id_video,user_id=session['user_id'],value=value)    
+        like = db.execute('SELECT * FROM likes_videos WHERE video_id=:id_video and user_id=:user_id',
+        id_video=id_video,user_id=session['user_id'])
+
+        if(len(like) == 1):
+            db.execute('DELETE FROM likes_videos WHERE video_id=:id_video and user_id=:user_id and value=:value',
+            id_video=id_video,user_id=session['user_id'],value=value)
+
+        else:
+            return "That user don't have liked or disliked that video0"
+    
     return 'Sucess'
 
 

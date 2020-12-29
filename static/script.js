@@ -36,8 +36,8 @@ if(like_button !== null){
             like_button_svg.style.fill = activeColor
             dislike_button_svg.style.fill = disableColor
 
-            like_span.innerHTML = `${Number(like_span.innerHTML) + 1 < 0 ? 0 : Number(like_span.innerHTML) + 1 }`
-            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) - 1 < 0 ? 0 : Number(dislike_span.innerHTML) - 1 }`
+            like_span.innerHTML = `${Number(like_span.innerHTML) + 1}`
+            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) - 1 <= 0 ? 0 : Number(dislike_span.innerHTML) - 1}`
 
             await fetch(linkToLike, {
                 method: "POST"
@@ -45,7 +45,10 @@ if(like_button !== null){
         }
         else{
             like_button_svg.style.fill = disableColor
-            like_span.innerHTML = `${Number(like_span.innerHTML) - 1 < 0 ? 0 : Number(like_span.innerHTML) - 1 }`
+            like_span.innerHTML = `${Number(like_span.innerHTML) - 1 <= 0 ? 0 : Number(like_span.innerHTML) - 1 }`
+            await fetch(linkToLike, {
+                method: "DELETE"
+            })
         }
     })
 
@@ -55,7 +58,7 @@ if(like_button !== null){
             like_button_svg.style.fill = disableColor
 
             like_span.innerHTML =  `${Number(like_span.innerHTML) - 1 < 0 ? 0 : Number(like_span.innerHTML) - 1 }`
-            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) + 1 < 0 ? 0 : Number(dislike_span.innerHTML) + 1 }`
+            dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) + 1}`
 
             await fetch(linkToDislike, {
                 method: "POST"
@@ -64,6 +67,9 @@ if(like_button !== null){
         else{
             dislike_button_svg.style.fill = disableColor
             dislike_span.innerHTML =  `${Number(dislike_span.innerHTML) - 1 < 0 ? 0 : Number(dislike_span.innerHTML) - 1 }`
+            await fetch(linkToDislike, {
+                method: "DELETE"
+            })
         }
     })
 }
