@@ -148,7 +148,7 @@ main img
 .perfil-img{
     max-width: 48px;
     max-height: 48px;
-    border-radius: 50%;
+    border-radius: 50vh;
 }
 
 .youtube-like-button,.youtube-dislike-button{
