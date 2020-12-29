@@ -28,8 +28,9 @@ Content
 - [x] Dislike a video
 - [x] Show how many likes a video has
 - [x] Show how many dislikes a video has
-- [x] Update password
-- [x] Update name
+- [x] Update password of user 
+- [x] Update name of user 
+- [x] Update image of user 
 - [x] Update Level of user
 - [x] Update playlist
 - [x] All actions of user in index page
